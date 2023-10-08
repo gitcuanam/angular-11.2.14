@@ -5,51 +5,227 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Injector} from '../../di';
-import {ErrorHandler} from '../../error_handler';
-import {DoCheck, OnChanges, OnInit} from '../../interface/lifecycle_hooks';
-import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, SchemaMetadata} from '../../metadata/schema';
-import {ViewEncapsulation} from '../../metadata/view';
-import {validateAgainstEventAttributes, validateAgainstEventProperties} from '../../sanitization/sanitization';
-import {Sanitizer} from '../../sanitization/sanitizer';
-import {assertDefined, assertDomNode, assertEqual, assertGreaterThanOrEqual, assertIndexInRange, assertNotEqual, assertNotSame, assertSame, assertString} from '../../util/assert';
-import {escapeCommentText} from '../../util/dom';
-import {createNamedArrayType} from '../../util/named_array_type';
-import {initNgDevMode} from '../../util/ng_dev_mode';
-import {normalizeDebugBindingName, normalizeDebugBindingValue} from '../../util/ng_reflect';
-import {stringify} from '../../util/stringify';
-import {assertFirstCreatePass, assertFirstUpdatePass, assertLContainer, assertLView, assertTNodeForLView, assertTNodeForTView} from '../assert';
-import {attachPatchData} from '../context_discovery';
-import {getFactoryDef} from '../definition_factory';
-import {diPublicInInjector, getNodeInjectable, getOrCreateNodeInjectorForNode} from '../di';
-import {formatRuntimeError, RuntimeError, RuntimeErrorCode} from '../error_code';
-import {throwMultipleComponentError} from '../errors';
-import {executeCheckHooks, executeInitAndCheckHooks, incrementInitPhaseFlags} from '../hooks';
-import {CONTAINER_HEADER_OFFSET, HAS_TRANSPLANTED_VIEWS, LContainer, MOVED_VIEWS} from '../interfaces/container';
-import {ComponentDef, ComponentTemplate, DirectiveDef, DirectiveDefListOrFactory, HostBindingsFunction, PipeDefListOrFactory, RenderFlags, ViewQueriesFunction} from '../interfaces/definition';
-import {NodeInjectorFactory} from '../interfaces/injector';
-import {AttributeMarker, InitialInputData, InitialInputs, LocalRefExtractor, PropertyAliases, PropertyAliasValue, TAttributes, TConstantsOrFactory, TContainerNode, TDirectiveHostNode, TElementContainerNode, TElementNode, TIcuContainerNode, TNode, TNodeFlags, TNodeType, TProjectionNode} from '../interfaces/node';
-import {isProceduralRenderer, Renderer3, RendererFactory3} from '../interfaces/renderer';
-import {RComment, RElement, RNode, RText} from '../interfaces/renderer_dom';
-import {SanitizerFn} from '../interfaces/sanitization';
-import {isComponentDef, isComponentHost, isContentQueryHost, isRootView} from '../interfaces/type_checks';
-import {CHILD_HEAD, CHILD_TAIL, CLEANUP, CONTEXT, DECLARATION_COMPONENT_VIEW, DECLARATION_VIEW, FLAGS, HEADER_OFFSET, HOST, HostBindingOpCodes, InitPhaseState, INJECTOR, LView, LViewFlags, NEXT, PARENT, RENDERER, RENDERER_FACTORY, RootContext, RootContextFlags, SANITIZER, T_HOST, TData, TRANSPLANTED_VIEWS_TO_REFRESH, TVIEW, TView, TViewType} from '../interfaces/view';
-import {assertPureTNodeType, assertTNodeType} from '../node_assert';
-import {updateTextNode} from '../node_manipulation';
-import {isInlineTemplate, isNodeMatchingSelectorList} from '../node_selector_matcher';
-import {profiler, ProfilerEvent} from '../profiler';
-import {enterView, getBindingsEnabled, getCurrentDirectiveIndex, getCurrentParentTNode, getCurrentTNode, getCurrentTNodePlaceholderOk, getSelectedIndex, isCurrentTNodeParent, isInCheckNoChangesMode, isInI18nBlock, leaveView, setBindingIndex, setBindingRootForHostBindings, setCurrentDirectiveIndex, setCurrentQueryIndex, setCurrentTNode, setIsInCheckNoChangesMode, setSelectedIndex} from '../state';
-import {NO_CHANGE} from '../tokens';
-import {isAnimationProp, mergeHostAttrs} from '../util/attrs_utils';
-import {INTERPOLATION_DELIMITER} from '../util/misc_utils';
-import {renderStringify, stringifyForError} from '../util/stringify_utils';
-import {getFirstLContainer, getLViewParent, getNextLContainer} from '../util/view_traversal_utils';
-import {getComponentLViewByIndex, getNativeByIndex, getNativeByTNode, isCreationMode, readPatchedLView, resetPreOrderHookFlags, unwrapLView, updateTransplantedViewCount, viewAttachedToChangeDetector} from '../util/view_utils';
-
-import {selectIndexInternal} from './advance';
-import {attachLContainerDebug, attachLViewDebug, cloneToLViewFromTViewBlueprint, cloneToTViewData, LCleanup, LViewBlueprint, MatchesArray, TCleanup, TNodeDebug, TNodeInitialInputs, TNodeLocalNames, TViewComponents, TViewConstructor} from './lview_debug';
-
-
+import { Injector } from '../../di';
+import { ErrorHandler } from '../../error_handler';
+import {
+  DoCheck,
+  OnChanges,
+  OnInit,
+} from '../../interface/lifecycle_hooks';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  SchemaMetadata,
+} from '../../metadata/schema';
+import { ViewEncapsulation } from '../../metadata/view';
+import {
+  validateAgainstEventAttributes,
+  validateAgainstEventProperties,
+} from '../../sanitization/sanitization';
+import { Sanitizer } from '../../sanitization/sanitizer';
+import {
+  assertDefined,
+  assertDomNode,
+  assertEqual,
+  assertGreaterThanOrEqual,
+  assertIndexInRange,
+  assertNotEqual,
+  assertNotSame,
+  assertSame,
+  assertString,
+} from '../../util/assert';
+import { escapeCommentText } from '../../util/dom';
+import { createNamedArrayType } from '../../util/named_array_type';
+import { initNgDevMode } from '../../util/ng_dev_mode';
+import {
+  normalizeDebugBindingName,
+  normalizeDebugBindingValue,
+} from '../../util/ng_reflect';
+import { stringify } from '../../util/stringify';
+import {
+  assertFirstCreatePass,
+  assertFirstUpdatePass,
+  assertLContainer,
+  assertLView,
+  assertTNodeForLView,
+  assertTNodeForTView,
+} from '../assert';
+import { attachPatchData } from '../context_discovery';
+import { getFactoryDef } from '../definition_factory';
+import {
+  diPublicInInjector,
+  getNodeInjectable,
+  getOrCreateNodeInjectorForNode,
+} from '../di';
+import {
+  formatRuntimeError,
+  RuntimeError,
+  RuntimeErrorCode,
+} from '../error_code';
+import { throwMultipleComponentError } from '../errors';
+import {
+  executeCheckHooks,
+  executeInitAndCheckHooks,
+  incrementInitPhaseFlags,
+} from '../hooks';
+import {
+  CONTAINER_HEADER_OFFSET,
+  HAS_TRANSPLANTED_VIEWS,
+  LContainer,
+  MOVED_VIEWS,
+} from '../interfaces/container';
+import {
+  ComponentDef,
+  ComponentTemplate,
+  DirectiveDef,
+  DirectiveDefListOrFactory,
+  HostBindingsFunction,
+  PipeDefListOrFactory,
+  RenderFlags,
+  ViewQueriesFunction,
+} from '../interfaces/definition';
+import { NodeInjectorFactory } from '../interfaces/injector';
+import {
+  AttributeMarker,
+  InitialInputData,
+  InitialInputs,
+  LocalRefExtractor,
+  PropertyAliases,
+  PropertyAliasValue,
+  TAttributes,
+  TConstantsOrFactory,
+  TContainerNode,
+  TDirectiveHostNode,
+  TElementContainerNode,
+  TElementNode,
+  TIcuContainerNode,
+  TNode,
+  TNodeFlags,
+  TNodeType,
+  TProjectionNode,
+} from '../interfaces/node';
+import {
+  isProceduralRenderer,
+  Renderer3,
+  RendererFactory3,
+} from '../interfaces/renderer';
+import {
+  RComment,
+  RElement,
+  RNode,
+  RText,
+} from '../interfaces/renderer_dom';
+import { SanitizerFn } from '../interfaces/sanitization';
+import {
+  isComponentDef,
+  isComponentHost,
+  isContentQueryHost,
+  isRootView,
+} from '../interfaces/type_checks';
+import {
+  CHILD_HEAD,
+  CHILD_TAIL,
+  CLEANUP,
+  CONTEXT,
+  DECLARATION_COMPONENT_VIEW,
+  DECLARATION_VIEW,
+  FLAGS,
+  HEADER_OFFSET,
+  HOST,
+  HostBindingOpCodes,
+  InitPhaseState,
+  INJECTOR,
+  LView,
+  LViewFlags,
+  NEXT,
+  PARENT,
+  RENDERER,
+  RENDERER_FACTORY,
+  RootContext,
+  RootContextFlags,
+  SANITIZER,
+  T_HOST,
+  TData,
+  TRANSPLANTED_VIEWS_TO_REFRESH,
+  TView,
+  TVIEW,
+  TViewType,
+} from '../interfaces/view';
+import {
+  assertPureTNodeType,
+  assertTNodeType,
+} from '../node_assert';
+import { updateTextNode } from '../node_manipulation';
+import {
+  isInlineTemplate,
+  isNodeMatchingSelectorList,
+} from '../node_selector_matcher';
+import {
+  profiler,
+  ProfilerEvent,
+} from '../profiler';
+import {
+  enterView,
+  getBindingsEnabled,
+  getCurrentDirectiveIndex,
+  getCurrentParentTNode,
+  getCurrentTNode,
+  getCurrentTNodePlaceholderOk,
+  getSelectedIndex,
+  isCurrentTNodeParent,
+  isInCheckNoChangesMode,
+  isInI18nBlock,
+  leaveView,
+  setBindingIndex,
+  setBindingRootForHostBindings,
+  setCurrentDirectiveIndex,
+  setCurrentQueryIndex,
+  setCurrentTNode,
+  setIsInCheckNoChangesMode,
+  setSelectedIndex,
+} from '../state';
+import { NO_CHANGE } from '../tokens';
+import {
+  isAnimationProp,
+  mergeHostAttrs,
+} from '../util/attrs_utils';
+import { INTERPOLATION_DELIMITER } from '../util/misc_utils';
+import {
+  renderStringify,
+  stringifyForError,
+} from '../util/stringify_utils';
+import {
+  getFirstLContainer,
+  getLViewParent,
+  getNextLContainer,
+} from '../util/view_traversal_utils';
+import {
+  getComponentLViewByIndex,
+  getNativeByIndex,
+  getNativeByTNode,
+  isCreationMode,
+  readPatchedLView,
+  resetPreOrderHookFlags,
+  unwrapLView,
+  updateTransplantedViewCount,
+  viewAttachedToChangeDetector,
+} from '../util/view_utils';
+import { selectIndexInternal } from './advance';
+import {
+  attachLContainerDebug,
+  attachLViewDebug,
+  cloneToLViewFromTViewBlueprint,
+  cloneToTViewData,
+  LCleanup,
+  LViewBlueprint,
+  MatchesArray,
+  TCleanup,
+  TNodeDebug,
+  TNodeInitialInputs,
+  TNodeLocalNames,
+  TViewComponents,
+  TViewConstructor,
+} from './lview_debug';
 
 /**
  * A permanent marker promise which signifies that the current CD tree is
@@ -280,6 +456,7 @@ export function allocExpando(
 //////////////////////////
 
 /**
+ * Render view
  * Processes a view in the creation mode. This includes a number of steps in a specific order:
  * - creating view query functions (if any);
  * - executing a template function in the creation mode;
@@ -600,6 +777,7 @@ export function getOrCreateTComponentView(def: ComponentDef<any>): TView {
 
 
 /**
+ * Tạo 1 TView instance
  * Creates a TView instance
  *
  * @param type Type of `TView`.

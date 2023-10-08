@@ -6,19 +6,71 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Renderer2} from '../render/api';
-
-import {checkAndUpdateElementDynamic, checkAndUpdateElementInline, createElement, listenToElementOutputs} from './element';
-import {expressionChangedAfterItHasBeenCheckedError} from './errors';
-import {appendNgContent} from './ng_content';
-import {callLifecycleHooksChildrenFirst, checkAndUpdateDirectiveDynamic, checkAndUpdateDirectiveInline, createDirectiveInstance, createPipeInstance, createProviderInstance} from './provider';
-import {checkAndUpdatePureExpressionDynamic, checkAndUpdatePureExpressionInline, createPureExpression} from './pure_expression';
-import {checkAndUpdateQuery, createQuery} from './query';
-import {createTemplateData, createViewContainerData} from './refs';
-import {checkAndUpdateTextDynamic, checkAndUpdateTextInline, createText} from './text';
-import {ArgumentType, asElementData, asQueryList, asTextData, CheckType, ElementData, NodeData, NodeDef, NodeFlags, ProviderData, RootData, Services, shiftInitState, ViewData, ViewDefinition, ViewFlags, ViewHandleEventFn, ViewState, ViewUpdateFn} from './types';
-import {checkBindingNoChanges, isComponentView, markParentViewsForCheckProjectedViews, NOOP, resolveDefinition, tokenKey} from './util';
-import {detachProjectedView} from './view_attach';
+import { Renderer2 } from '../render/api';
+import {
+  checkAndUpdateElementDynamic,
+  checkAndUpdateElementInline,
+  createElement,
+  listenToElementOutputs,
+} from './element';
+import { expressionChangedAfterItHasBeenCheckedError } from './errors';
+import { appendNgContent } from './ng_content';
+import {
+  callLifecycleHooksChildrenFirst,
+  checkAndUpdateDirectiveDynamic,
+  checkAndUpdateDirectiveInline,
+  createDirectiveInstance,
+  createPipeInstance,
+  createProviderInstance,
+} from './provider';
+import {
+  checkAndUpdatePureExpressionDynamic,
+  checkAndUpdatePureExpressionInline,
+  createPureExpression,
+} from './pure_expression';
+import {
+  checkAndUpdateQuery,
+  createQuery,
+} from './query';
+import {
+  createTemplateData,
+  createViewContainerData,
+} from './refs';
+import {
+  checkAndUpdateTextDynamic,
+  checkAndUpdateTextInline,
+  createText,
+} from './text';
+import {
+  ArgumentType,
+  asElementData,
+  asQueryList,
+  asTextData,
+  CheckType,
+  ElementData,
+  NodeData,
+  NodeDef,
+  NodeFlags,
+  ProviderData,
+  RootData,
+  Services,
+  shiftInitState,
+  ViewData,
+  ViewDefinition,
+  ViewFlags,
+  ViewHandleEventFn,
+  ViewState,
+  ViewUpdateFn,
+} from './types';
+import {
+  checkBindingNoChanges,
+  isComponentView,
+  markParentViewsForCheckProjectedViews,
+  NOOP,
+  resolveDefinition,
+  tokenKey,
+} from './util';
+import { detachProjectedView } from './view_attach';
 
 export function viewDef(
     flags: ViewFlags, nodes: NodeDef[], updateDirectives?: null|ViewUpdateFn,
@@ -258,6 +310,10 @@ function initView(view: ViewData, component: any, context: any) {
   view.context = context;
 }
 
+/**
+ * @description Tạo node từ view, Tạo data cho các view có pipe, directive, lắng nghe output, ...
+ * @param view 
+ */
 function createViewNodes(view: ViewData) {
   let renderHost: any;
   if (isComponentView(view)) {
@@ -360,6 +416,10 @@ export function checkNoChangesView(view: ViewData) {
   view.state &= ~(ViewState.CheckProjectedViews | ViewState.CheckProjectedView);
 }
 
+/**
+ * @description Kiểm tra và update view khi trạng thái của component thay đổi
+ * @param view 
+ */
 export function checkAndUpdateView(view: ViewData) {
   if (view.state & ViewState.BeforeFirstCheck) {
     view.state &= ~ViewState.BeforeFirstCheck;

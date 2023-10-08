@@ -6,7 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, EmbeddedViewRef, Input, OnChanges, SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef} from '@angular/core';
+import {
+  Directive,
+  EmbeddedViewRef,
+  Input,
+  OnChanges,
+  SimpleChange,
+  SimpleChanges,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 
 /**
  * @ngModule CommonModule
@@ -51,6 +60,7 @@ export class NgTemplateOutlet implements OnChanges {
 
   constructor(private _viewContainerRef: ViewContainerRef) {}
 
+  // lắng nghe khi view truyền vào 'thay đổi'
   ngOnChanges(changes: SimpleChanges) {
     const recreateView = this._shouldRecreateView(changes);
 

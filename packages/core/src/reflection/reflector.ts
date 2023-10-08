@@ -14,6 +14,7 @@ export {PlatformReflectionCapabilities};
 export {GetterFn, MethodFn, SetterFn};
 
 /**
+ * Parser thực hiện phân giải các từ tố, từ vị trong Angular như hooks, annotation, identifier, ...
  * Provides access to reflection data about symbols. Used internally by Angular
  * to power dependency injection and compilation.
  */

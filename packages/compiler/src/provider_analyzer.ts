@@ -6,12 +6,35 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-
-import {CompileDiDependencyMetadata, CompileDirectiveMetadata, CompileDirectiveSummary, CompileNgModuleMetadata, CompileProviderMetadata, CompileQueryMetadata, CompileTokenMetadata, CompileTypeMetadata, tokenName, tokenReference} from './compile_metadata';
-import {CompileReflector} from './compile_reflector';
-import {createTokenForExternalReference, Identifiers} from './identifiers';
-import {ParseError, ParseSourceSpan} from './parse_util';
-import {AttrAst, DirectiveAst, ProviderAst, ProviderAstType, QueryMatch, ReferenceAst} from './template_parser/template_ast';
+import {
+  CompileDiDependencyMetadata,
+  CompileDirectiveMetadata,
+  CompileDirectiveSummary,
+  CompileNgModuleMetadata,
+  CompileProviderMetadata,
+  CompileQueryMetadata,
+  CompileTokenMetadata,
+  CompileTypeMetadata,
+  tokenName,
+  tokenReference,
+} from './compile_metadata';
+import { CompileReflector } from './compile_reflector';
+import {
+  createTokenForExternalReference,
+  Identifiers,
+} from './identifiers';
+import {
+  ParseError,
+  ParseSourceSpan,
+} from './parse_util';
+import {
+  AttrAst,
+  DirectiveAst,
+  ProviderAst,
+  ProviderAstType,
+  QueryMatch,
+  ReferenceAst,
+} from './template_parser/template_ast';
 
 export class ProviderError extends ParseError {
   constructor(message: string, span: ParseSourceSpan) {
@@ -188,6 +211,7 @@ export class ProviderElementContext {
     if (transformedProviderAst) {
       return transformedProviderAst;
     }
+    // Phát hiện phụ thuộc vòng khi phân tích các providers
     if (this._seenProviders.get(tokenReference(token)) != null) {
       this.viewContext.errors.push(new ProviderError(
           `Cannot instantiate cyclic dependency! ${tokenName(token)}`, this._sourceSpan));
@@ -364,6 +388,7 @@ export class NgModuleProviderAnalyzer {
     if (transformedProviderAst) {
       return transformedProviderAst;
     }
+    // Phát hiện phụ thuộc vòng khi phân tích các providers
     if (this._seenProviders.get(tokenReference(token)) != null) {
       this._errors.push(new ProviderError(
           `Cannot instantiate cyclic dependency! ${tokenName(token)}`,

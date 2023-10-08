@@ -72,6 +72,9 @@ export function isDelegateCtor(typeStr: string): boolean {
       (ES2015_INHERITED_CLASS.test(typeStr) && !ES2015_INHERITED_CLASS_WITH_CTOR.test(typeStr));
 }
 
+/**
+ * @description Được dùng như một delegate của @see Reflector
+ */
 export class ReflectionCapabilities implements PlatformReflectionCapabilities {
   private _reflect: any;
 
@@ -270,6 +273,12 @@ export class ReflectionCapabilities implements PlatformReflectionCapabilities {
     return this._ownPropMetadata(typeOrFunc, getParentCtor(typeOrFunc)) || {};
   }
 
+  /**
+   * @description Kiểm tra xem liệu có lifecyle hook trong file đang được parse
+   * @param type 
+   * @param lcProperty 
+   * @returns 
+   */
   hasLifecycleHook(type: any, lcProperty: string): boolean {
     return type instanceof Type && lcProperty in type.prototype;
   }

@@ -6,26 +6,52 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getCompilerFacade, R3DirectiveMetadataFacade} from '../../compiler/compiler_facade';
-import {R3ComponentMetadataFacade, R3QueryMetadataFacade} from '../../compiler/compiler_facade_interface';
-import {resolveForwardRef} from '../../di/forward_ref';
-import {getReflect, reflectDependencies} from '../../di/jit/util';
-import {Type} from '../../interface/type';
-import {Query} from '../../metadata/di';
-import {Component, Directive, Input} from '../../metadata/directives';
-import {componentNeedsResolution, maybeQueueResolutionOfComponentResources} from '../../metadata/resource_loading';
-import {ViewEncapsulation} from '../../metadata/view';
-import {EMPTY_OBJ} from '../../util/empty';
-import {initNgDevMode} from '../../util/ng_dev_mode';
-import {getComponentDef, getDirectiveDef} from '../definition';
-import {EMPTY_ARRAY} from '../empty';
-import {NG_COMP_DEF, NG_DIR_DEF, NG_FACTORY_DEF} from '../fields';
-import {ComponentType} from '../interfaces/definition';
-import {stringifyForError} from '../util/stringify_utils';
-
-import {angularCoreEnv} from './environment';
-import {getJitOptions} from './jit_options';
-import {flushModuleScopingQueueAsMuchAsPossible, patchComponentDefWithScope, transitiveScopesFor} from './module';
+import {
+  getCompilerFacade,
+  R3DirectiveMetadataFacade,
+} from '../../compiler/compiler_facade';
+import {
+  R3ComponentMetadataFacade,
+  R3QueryMetadataFacade,
+} from '../../compiler/compiler_facade_interface';
+import { resolveForwardRef } from '../../di/forward_ref';
+import {
+  getReflect,
+  reflectDependencies,
+} from '../../di/jit/util';
+import { Type } from '../../interface/type';
+import { Query } from '../../metadata/di';
+import {
+  Component,
+  Directive,
+  Input,
+} from '../../metadata/directives';
+import {
+  componentNeedsResolution,
+  maybeQueueResolutionOfComponentResources,
+} from '../../metadata/resource_loading';
+import { ViewEncapsulation } from '../../metadata/view';
+import { EMPTY_OBJ } from '../../util/empty';
+import { initNgDevMode } from '../../util/ng_dev_mode';
+import {
+  getComponentDef,
+  getDirectiveDef,
+} from '../definition';
+import { EMPTY_ARRAY } from '../empty';
+import {
+  NG_COMP_DEF,
+  NG_DIR_DEF,
+  NG_FACTORY_DEF,
+} from '../fields';
+import { ComponentType } from '../interfaces/definition';
+import { stringifyForError } from '../util/stringify_utils';
+import { angularCoreEnv } from './environment';
+import { getJitOptions } from './jit_options';
+import {
+  flushModuleScopingQueueAsMuchAsPossible,
+  patchComponentDefWithScope,
+  transitiveScopesFor,
+} from './module';
 
 /**
  * Keep track of the compilation depth to avoid reentrancy issues during JIT compilation. This
@@ -229,6 +255,7 @@ export function extendsDirectlyFromObject(type: Type<any>): boolean {
 }
 
 /**
+ * Lấy metadata từ directive
  * Extract the `R3DirectiveMetadata` for a particular directive (either a `Directive` or a
  * `Component`).
  */

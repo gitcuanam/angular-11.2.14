@@ -5,7 +5,21 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Directive, DoCheck, ElementRef, Input, IterableChanges, IterableDiffer, IterableDiffers, KeyValueChanges, KeyValueDiffer, KeyValueDiffers, Renderer2, ɵisListLikeIterable as isListLikeIterable, ɵstringify as stringify} from '@angular/core';
+import {
+  Directive,
+  DoCheck,
+  ElementRef,
+  Input,
+  IterableChanges,
+  IterableDiffer,
+  IterableDiffers,
+  KeyValueChanges,
+  KeyValueDiffer,
+  KeyValueDiffers,
+  Renderer2,
+  ɵisListLikeIterable as isListLikeIterable,
+  ɵstringify as stringify,
+} from '@angular/core';
 
 type NgClassSupportedTypes = string[]|Set<string>|{[klass: string]: any}|null|undefined;
 
@@ -27,6 +41,8 @@ type NgClassSupportedTypes = string[]|Set<string>|{[klass: string]: any}|null|un
  *
  * @description
  *
+ * Thay thế CSS class tại một phần tử HTML
+ * 
  * Adds and removes CSS classes on an HTML element.
  *
  * The CSS classes are updated as follows, depending on the type of the expression evaluation:

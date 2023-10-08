@@ -6,16 +6,62 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AbsoluteSourceSpan, AST, AstPath, AttrAst, Attribute, BoundDirectivePropertyAst, BoundElementPropertyAst, BoundEventAst, BoundTextAst, Element, ElementAst, EmptyExpr, ExpressionBinding, getHtmlTagDefinition, HtmlAstPath, Node as HtmlAst, NullTemplateVisitor, ParseSpan, ReferenceAst, TagContentType, TemplateBinding, Text, VariableBinding, Visitor} from '@angular/compiler';
-import {$$, $_, isAsciiLetter, isDigit} from '@angular/compiler/src/chars';
+import {
+  AbsoluteSourceSpan,
+  AST,
+  AstPath,
+  AttrAst,
+  Attribute,
+  BoundDirectivePropertyAst,
+  BoundElementPropertyAst,
+  BoundEventAst,
+  BoundTextAst,
+  Element,
+  ElementAst,
+  EmptyExpr,
+  ExpressionBinding,
+  getHtmlTagDefinition,
+  HtmlAstPath,
+  Node as HtmlAst,
+  NullTemplateVisitor,
+  ParseSpan,
+  ReferenceAst,
+  TagContentType,
+  TemplateBinding,
+  Text,
+  VariableBinding,
+  Visitor,
+} from '@angular/compiler';
+import {
+  $$,
+  $_,
+  isAsciiLetter,
+  isDigit,
+} from '@angular/compiler/src/chars';
 
-import {ATTR, getBindingDescriptor} from './binding_utils';
-import {getExpressionScope} from './expression_diagnostics';
-import {getExpressionCompletions} from './expressions';
-import {attributeNames, elementNames, eventNames, propertyNames} from './html_info';
-import {InlineTemplate} from './template';
+import {
+  ATTR,
+  getBindingDescriptor,
+} from './binding_utils';
+import { getExpressionScope } from './expression_diagnostics';
+import { getExpressionCompletions } from './expressions';
+import {
+  attributeNames,
+  elementNames,
+  eventNames,
+  propertyNames,
+} from './html_info';
+import { InlineTemplate } from './template';
 import * as ng from './types';
-import {diagnosticInfoFromTemplateInfo, findTemplateAstAt, getPathToNodeAtPosition, getSelectors, inSpan, isStructuralDirective, spanOf} from './utils';
+import {
+  diagnosticInfoFromTemplateInfo,
+  findTemplateAstAt,
+  getPathToNodeAtPosition,
+  getSelectors,
+  inSpan,
+  isStructuralDirective,
+  spanOf,
+} from './utils';
 
 const HIDDEN_HTML_ELEMENTS: ReadonlySet<string> =
     new Set(['html', 'script', 'noscript', 'base', 'body', 'title', 'head', 'link']);
@@ -506,6 +552,7 @@ class ExpressionVisitor extends NullTemplateVisitor {
   }
 
   /**
+   * @description Xử lý directive dùng microsyntax, đưa về cú pháp dùng ng-template bọc lấy host element và các phần tử con cháu của nó
    * This method handles the completions of attribute values for directives that
    * support the microsyntax format. Examples are *ngFor and *ngIf.
    * These directives allows declaration of "let" variables, adds context-specific

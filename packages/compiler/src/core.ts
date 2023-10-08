@@ -1,4 +1,5 @@
 /**
+ * @description Các symbol của angular core sau khi được parse bởi các resolver (directive_resolver, pipe_resolver, etc)
  * @license
  * Copyright Google LLC All Rights Reserved.
  *
