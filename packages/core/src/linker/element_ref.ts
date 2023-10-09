@@ -6,14 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TNode} from '../render3/interfaces/node';
-import {RElement} from '../render3/interfaces/renderer_dom';
-import {LView} from '../render3/interfaces/view';
-import {getCurrentTNode, getLView} from '../render3/state';
-import {getNativeByTNode} from '../render3/util/view_utils';
-import {noop} from '../util/noop';
+import { TNode } from '../render3/interfaces/node';
+import { RElement } from '../render3/interfaces/renderer_dom';
+import { LView } from '../render3/interfaces/view';
+import {
+  getCurrentTNode,
+  getLView,
+} from '../render3/state';
+import { getNativeByTNode } from '../render3/util/view_utils';
+import { noop } from '../util/noop';
 
 /**
+ * Tạo một ElementRef từ node 'gần đây nhất'
  * Creates an ElementRef from the most recent node.
  *
  * @returns The ElementRef instance to use

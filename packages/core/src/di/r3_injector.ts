@@ -8,25 +8,59 @@
 
 import '../util/ng_dev_mode';
 
-import {OnDestroy} from '../interface/lifecycle_hooks';
-import {AbstractType, Type} from '../interface/type';
-import {FactoryFn, getFactoryDef} from '../render3/definition_factory';
-import {throwCyclicDependencyError, throwInvalidProviderError, throwMixedMultiProviderError} from '../render3/errors_di';
-import {deepForEach, newArray} from '../util/array_utils';
-import {stringify} from '../util/stringify';
-
-import {resolveForwardRef} from './forward_ref';
-import {InjectionToken} from './injection_token';
-import {Injector} from './injector';
-import {catchInjectorError, injectArgs, NG_TEMP_TOKEN_PATH, setCurrentInjector, THROW_IF_NOT_FOUND, USE_VALUE, ɵɵinject} from './injector_compatibility';
-import {INJECTOR} from './injector_token';
-import {getInheritedInjectableDef, getInjectableDef, getInjectorDef, InjectorType, InjectorTypeWithProviders, ɵɵInjectableDef} from './interface/defs';
-import {InjectFlags} from './interface/injector';
-import {ClassProvider, ConstructorProvider, ExistingProvider, FactoryProvider, StaticClassProvider, StaticProvider, TypeProvider, ValueProvider} from './interface/provider';
-import {NullInjector} from './null_injector';
-import {INJECTOR_SCOPE} from './scope';
-
-
+import { OnDestroy } from '../interface/lifecycle_hooks';
+import {
+  AbstractType,
+  Type,
+} from '../interface/type';
+import {
+  FactoryFn,
+  getFactoryDef,
+} from '../render3/definition_factory';
+import {
+  throwCyclicDependencyError,
+  throwInvalidProviderError,
+  throwMixedMultiProviderError,
+} from '../render3/errors_di';
+import {
+  deepForEach,
+  newArray,
+} from '../util/array_utils';
+import { stringify } from '../util/stringify';
+import { resolveForwardRef } from './forward_ref';
+import { InjectionToken } from './injection_token';
+import { Injector } from './injector';
+import {
+  catchInjectorError,
+  injectArgs,
+  NG_TEMP_TOKEN_PATH,
+  setCurrentInjector,
+  THROW_IF_NOT_FOUND,
+  USE_VALUE,
+  ɵɵinject,
+} from './injector_compatibility';
+import { INJECTOR } from './injector_token';
+import {
+  getInheritedInjectableDef,
+  getInjectableDef,
+  getInjectorDef,
+  InjectorType,
+  InjectorTypeWithProviders,
+  ɵɵInjectableDef,
+} from './interface/defs';
+import { InjectFlags } from './interface/injector';
+import {
+  ClassProvider,
+  ConstructorProvider,
+  ExistingProvider,
+  FactoryProvider,
+  StaticClassProvider,
+  StaticProvider,
+  TypeProvider,
+  ValueProvider,
+} from './interface/provider';
+import { NullInjector } from './null_injector';
+import { INJECTOR_SCOPE } from './scope';
 
 /**
  * Internal type for a single provider in a deep provider array.
@@ -147,6 +181,21 @@ export class R3Injector {
     deepForEach([def], injectorDef => this.processInjectorType(injectorDef, [], dedupStack));
 
     // Make sure the INJECTOR token provides this injector.
+    /**
+     *
+    <pre><code>
+      import { Injectable, Injector } from '@angular/core';
+
+      @Injectable()
+      export class MyService {
+        constructor(private injector: Injector) {
+          const serviceInstance = this.injector.get(MyService);
+          // Now you have an instance of MyService from the injector of this service.
+        }
+      }
+    </code></pre>
+     */
+
     this.records.set(INJECTOR, makeRecord(undefined, this));
 
     // Detect whether this injector has the APP_ROOT_SCOPE token and thus should provide
@@ -406,6 +455,7 @@ export class R3Injector {
   }
 
   private hydrate<T>(token: Type<T>|AbstractType<T>|InjectionToken<T>, record: Record<T>): T {
+    // Ném lỗi khi injector phát hiện ra phụ thuộc vòng khi phân tích các providers
     if (ngDevMode && record.value === CIRCULAR) {
       throwCyclicDependencyError(stringify(token));
     } else if (record.value === NOT_YET) {

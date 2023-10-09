@@ -6,38 +6,73 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import { global } from './util/global';
+
 /**
  * @module
  * @description
+ * Export các file core
  * Entry point from which you should import all public core APIs.
  */
 export * from './metadata';
 export * from './version';
-export {TypeDecorator} from './util/decorators';
+export { TypeDecorator } from './util/decorators';
 export * from './di';
-export {createPlatform, assertPlatform, destroyPlatform, getPlatform, PlatformRef, ApplicationRef, createPlatformFactory, NgProbeToken} from './application_ref';
-export {enableProdMode, isDevMode} from './util/is_dev_mode';
-export {APP_ID, PACKAGE_ROOT_URL, PLATFORM_INITIALIZER, PLATFORM_ID, APP_BOOTSTRAP_LISTENER} from './application_tokens';
-export {APP_INITIALIZER, ApplicationInitStatus} from './application_init';
+export {
+  ApplicationRef,
+  assertPlatform,
+  createPlatform,
+  createPlatformFactory,
+  destroyPlatform,
+  getPlatform,
+  NgProbeToken,
+  PlatformRef,
+} from './application_ref';
+export { enableProdMode, isDevMode } from './util/is_dev_mode';
+export {
+  APP_BOOTSTRAP_LISTENER,
+  APP_ID,
+  PACKAGE_ROOT_URL,
+  PLATFORM_ID,
+  PLATFORM_INITIALIZER,
+} from './application_tokens';
+export { APP_INITIALIZER, ApplicationInitStatus } from './application_init';
 export * from './zone';
 export * from './render';
 export * from './linker';
-export {DebugElement, DebugEventListener, DebugNode, asNativeElements, getDebugNode, Predicate} from './debug/debug_node';
-export {GetTestability, Testability, TestabilityRegistry, setTestabilityGetter} from './testability/testability';
+export {
+  asNativeElements,
+  DebugElement,
+  DebugEventListener,
+  DebugNode,
+  getDebugNode,
+  Predicate,
+} from './debug/debug_node';
+export {
+  GetTestability,
+  setTestabilityGetter,
+  Testability,
+  TestabilityRegistry,
+} from './testability/testability';
 export * from './change_detection';
 export * from './platform_core_providers';
-export {TRANSLATIONS, TRANSLATIONS_FORMAT, LOCALE_ID, DEFAULT_CURRENCY_CODE, MissingTranslationStrategy} from './i18n/tokens';
-export {ApplicationModule} from './application_module';
-export {AbstractType, Type} from './interface/type';
-export {EventEmitter} from './event_emitter';
-export {ErrorHandler} from './error_handler';
+export {
+  DEFAULT_CURRENCY_CODE,
+  LOCALE_ID,
+  MissingTranslationStrategy,
+  TRANSLATIONS,
+  TRANSLATIONS_FORMAT,
+} from './i18n/tokens';
+export { ApplicationModule } from './application_module';
+export { AbstractType, Type } from './interface/type';
+export { EventEmitter } from './event_emitter';
+export { ErrorHandler } from './error_handler';
 export * from './core_private_export';
 export * from './core_render3_private_export';
-export {SecurityContext} from './sanitization/security';
-export {Sanitizer} from './sanitization/sanitizer';
+export { SecurityContext } from './sanitization/security';
+export { Sanitizer } from './sanitization/sanitizer';
 export * from './codegen_private_exports';
 
-import {global} from './util/global';
 if (typeof ngDevMode !== 'undefined' && ngDevMode) {
   // This helper is to give a reasonable error message to people upgrading to v9 that have not yet
   // installed `@angular/localize` in their app.

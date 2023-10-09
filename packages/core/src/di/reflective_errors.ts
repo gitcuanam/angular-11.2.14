@@ -6,12 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Type} from '../interface/type';
-import {ERROR_ORIGINAL_ERROR, wrappedError} from '../util/errors';
-import {stringify} from '../util/stringify';
-
-import {ReflectiveInjector} from './reflective_injector';
-import {ReflectiveKey} from './reflective_key';
+import { Type } from '../interface/type';
+import {
+  ERROR_ORIGINAL_ERROR,
+  wrappedError,
+} from '../util/errors';
+import { stringify } from '../util/stringify';
+import { ReflectiveInjector } from './reflective_injector';
+import { ReflectiveKey } from './reflective_key';
 
 function findFirstClosedCycle(keys: any[]): any[] {
   const res: any[] = [];
@@ -88,6 +90,7 @@ export function noProviderError(injector: ReflectiveInjector, key: ReflectiveKey
 }
 
 /**
+ * Ném ra lỗi khi các đồ thị phụ thuộc của các dependency tạo thành một chu trình
  * Thrown when dependencies form a cycle.
  *
  * @usageNotes

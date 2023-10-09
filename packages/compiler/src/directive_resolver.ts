@@ -17,7 +17,8 @@ const QUERY_METADATA_IDENTIFIERS = [
   createContentChildren,
 ];
 
-/*
+/**
+ * @description Parser cho directive, kết quả trả ra một symbol
  * Resolve a `Type` for {@link Directive}.
  *
  * This interface can be overridden by the application developer to create custom behavior.

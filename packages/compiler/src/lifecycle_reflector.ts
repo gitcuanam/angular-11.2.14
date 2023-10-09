@@ -1,6 +1,8 @@
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
+ * 
+ * @description parser nhằm phát hiện ra các hook được khai báo trong code
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
